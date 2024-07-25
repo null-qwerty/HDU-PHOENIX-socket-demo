@@ -33,11 +33,5 @@
 注: `tf.cpp` 使用了 `RMCV-PHOENIX2024`, 安装方式如下：
 
 1. 下载 [源码](https://github.com/HDU-PHOENIX/RMCV2024-PHOENIX/releases/download/v0.7.3/RMCV-PHOENIX-0.7.3-Linux.tar.xz)
-2. 进入根目录, 执行
-```shell
-cd scripts
-bash install.sh
-# or
-bash scripts/install.sh
-```
-3. 全部勾选安装即可
+2. `include` 文件夹**的内容**放在 `/usr/local/include`, `lib` 文件夹**的内容**放在 `/usr/local/lib`
+3. 编译如果报错，可能是缺少依赖，缺少什么安装什么即可
