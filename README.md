@@ -30,7 +30,7 @@
 - `client.cpp` 客户端程序
 
 ---
-注: `tf.cpp` 使用了 `RMCV-PHOENIX2024`, 安装方式如下：
+注: `tf.cpp` 使用了 `RMCV2024-PHOENIX`, 安装方式如下：
 
 1. 下载 [源码](https://github.com/HDU-PHOENIX/RMCV2024-PHOENIX/releases/download/v0.7.3/RMCV-PHOENIX-0.7.3-Linux.tar.xz)
 2. `include` 文件夹**的内容**放在 `/usr/local/include`, `lib` 文件夹**的内容**放在 `/usr/local/lib`
