@@ -1,0 +1,23 @@
+{
+    "transform":
+    [
+        {
+            "from": "Odom",
+            "to": "Gimbal",
+            "translation": [0.0,0.0,0.0],
+            "rotation": [0.65536,0.1145141919810,0.0]
+        },
+        {
+            "from": "Gimbal",
+            "to": "Camera",
+            "translation": [0.2,0.0,0.0],
+            "rotation": [-1.57079632679489661923,0.0,-1.57079632679489661923]
+        },
+        {
+            "from": "Gimbal",
+            "to": "Shooter",
+            "translation": [0.18,0.0,-0.03],
+            "rotation": [0.0,0.0,0.0]
+        }
+    ]
+}
