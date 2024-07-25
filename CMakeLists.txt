@@ -20,6 +20,6 @@ add_executable(tf_server src/SocketServer.cpp src/Message.cpp src/Info.cpp src/t
 add_executable(client src/SocketClient.cpp src/Message.cpp src/Info.cpp src/client.cpp)
 
 target_link_libraries(server pthread ${OpenCV_LIBS})
-target_link_libraries(client pthread ${OpenCV_LIBS} -g)
+target_link_libraries(client pthread ${OpenCV_LIBS})
 target_link_libraries(camerainfo_server pthread ${OpenCV_LIBS})
 target_link_libraries(tf_server pthread ${OpenCV_LIBS} -lPHOENIX)
