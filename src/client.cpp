@@ -1,6 +1,8 @@
-#include "Info.hpp"
 #include <cstring>
 #include <memory>
+#include <sstream>
+#include <vector>
+
 #include <opencv2/core/mat.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/opencv.hpp>
@@ -9,8 +11,7 @@
 #include "SocketClient.hpp"
 #include "Message.hpp"
 #include "Application.hpp"
-#include <sstream>
-#include <vector>
+#include "Info.hpp"
 
 // 客户端处理类
 // 由于原先的 Application 类不太适合多 fd 处理, 因此新建一个类

@@ -1,7 +1,6 @@
 #include "SocketServer.hpp"
 #include "Info.hpp"
 
-
 SocketServer::SocketServer(int port)
 {
     this->port = port;

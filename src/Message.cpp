@@ -1,7 +1,7 @@
-#include "Message.hpp"
-
 #include <cstring>
 #include <cstdlib>
+
+#include "Message.hpp"
 
 Message::Message(){
     message.Start = 0x0D00;

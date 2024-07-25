@@ -1,6 +1,7 @@
-#include "Info.hpp"
 #include <thread>
+
 #include "SocketClient.hpp"
+#include "Info.hpp"
 
 SocketClient::SocketClient(const char *address, int port)
 {
