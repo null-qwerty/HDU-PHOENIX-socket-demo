@@ -32,7 +32,7 @@ private:
 extern Info info;
 
 // 定义输出宏
-#define INFO(msg) info.print(std::string(msg), "default")
+#define INFO(msg) info.print(std::string(msg), "white")
 #define WARNING(msg) info.print(std::string(msg), "yellow")
 #define ERROR(msg) info.print(std::string(msg), "red")
 #define SUCCESS(msg) info.print(std::string(msg), "green")
