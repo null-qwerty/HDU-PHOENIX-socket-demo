@@ -1,7 +1,8 @@
 #include <thread>
 
 #include "SocketClient.hpp"
-#include "Info.hpp"
+
+#include <PHOENIX/Utils/Info/Info.hpp>
 
 SocketClient::SocketClient(const char *address, int port)
 {
@@ -23,7 +24,7 @@ void SocketClient::connect()
         ERROR("Failed to set socket options.");
         exit(1);
     }
-    
+
     struct sockaddr_in server_address;
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(this->port);
@@ -38,7 +39,7 @@ void SocketClient::connect()
     std::thread receive_thread(&SocketClient::receive, this);
     receive_thread.detach();
 
-    if (this->on_connect != nullptr) {  // 连接成功处理函数
+    if (this->on_connect != nullptr) { // 连接成功处理函数
         this->on_connect();
     }
 }
@@ -50,7 +51,7 @@ void SocketClient::disconnect()
     send("/disconnect", sizeof("/disconnect"));
     close(this->client_fd); // 关闭连接
 
-    if (this->on_disconnect != nullptr) {   // 断开连接处理函数
+    if (this->on_disconnect != nullptr) { // 断开连接处理函数
         this->on_disconnect();
     }
 }
@@ -80,22 +81,22 @@ void SocketClient::receive()
     char buffer[10240] = { 0 };
     while (true) {
         int lenth = read(this->client_fd, buffer, 10240);
-        
+
         if (lenth <= 0) {
             WARNING("Server closed.");
             this->disconnect();
             break;
         }
 
-        while(lenth < 10240){   // 读取完整应用层消息
+        while (lenth < 10240) { // 读取完整应用层消息
             int valread = read(this->client_fd, buffer + lenth, 10240 - lenth);
-            if(valread <= 0){
+            if (valread <= 0) {
                 break;
             }
             lenth += valread;
         }
 
-        if (this->on_message != nullptr) {  // 消息处理函数
+        if (this->on_message != nullptr) { // 消息处理函数
             this->on_message(buffer);
         }
     }

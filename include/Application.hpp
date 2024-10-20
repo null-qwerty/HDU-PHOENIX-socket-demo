@@ -11,7 +11,8 @@
 #include <opencv2/opencv.hpp>
 
 #include "Message.hpp"
-#include "Info.hpp"
+
+#include <PHOENIX/Utils/Info/Info.hpp>
 
 /**
  * @brief Application 类, 用于解析应用层消息, 并提供发送消息的接口
@@ -89,13 +90,14 @@ public:
     std::string get_clients();
 
 private:
-    std::map<std::string, std::function<void(std::string)>> commands;   ///< 命令列表
-    std::map<unsigned int, unsigned char *> data_temp;                  ///< 数据缓存
-    std::map<unsigned int, unsigned int> received_lenth;                ///< 已接收数据长度
-    std::shared_ptr<T> socket;                                 ///< SocketServer 或者 SocketClient 的智能指针
+    std::map<std::string, std::function<void(std::string)>>
+        commands; ///< 命令列表
+    std::map<unsigned int, unsigned char *> data_temp; ///< 数据缓存
+    std::map<unsigned int, unsigned int> received_lenth; ///< 已接收数据长度
+    std::shared_ptr<T> socket; ///< SocketServer 或者 SocketClient 的智能指针
 };
 
-template <typename T> Application<T>::Application(std::shared_ptr<T>& socket)
+template <typename T> Application<T>::Application(std::shared_ptr<T> &socket)
 {
     this->socket = socket;
 }
@@ -115,22 +117,22 @@ int Application<T>::encode_and_send(unsigned short type, unsigned int dataID,
     return 0;
 }
 
-template <typename T>
-void Application<T>::disconnect(int client)
+template <typename T> void Application<T>::disconnect(int client)
 {
 }
 
-template <typename T>
-std::string Application<T>::get_clients()
+template <typename T> std::string Application<T>::get_clients()
 {
     return "";
 }
 
 #ifdef SOCKETSERVER_HPP
-template<>
-int Application<SocketServer>::encode_and_send(unsigned short type, unsigned int dataID,
-                                     unsigned char *data,
-                                     unsigned int total_lenth, int sendto)
+template <>
+int Application<SocketServer>::encode_and_send(unsigned short type,
+                                               unsigned int dataID,
+                                               unsigned char *data,
+                                               unsigned int total_lenth,
+                                               int sendto)
 {
     Message message(type);
     message.set_dataID(dataID);
@@ -154,7 +156,8 @@ int Application<SocketServer>::encode_and_send(unsigned short type, unsigned int
             if (sendto == -1)
                 ret = socket->broadcast((char *)(message.get_buffer()), 10240);
             else
-                ret = socket->send(sendto, (char *)(message.get_buffer()), 10240);
+                ret =
+                    socket->send(sendto, (char *)(message.get_buffer()), 10240);
             offset += lenth;
             if (ret < 0)
                 return ret;
@@ -164,15 +167,13 @@ int Application<SocketServer>::encode_and_send(unsigned short type, unsigned int
     return ret;
 }
 
-template<>
-void Application<SocketServer>::disconnect(int client)
+template <> void Application<SocketServer>::disconnect(int client)
 {
     socket->disconnect(client);
     return;
 }
 
-template<>
-std::string Application<SocketServer>::get_clients()
+template <> std::string Application<SocketServer>::get_clients()
 {
     return socket->get_clients();
 }
@@ -180,10 +181,12 @@ std::string Application<SocketServer>::get_clients()
 #endif
 
 #ifdef SOCKETCLIENT_HPP
-template<>
-int Application<SocketClient>::encode_and_send(unsigned short type, unsigned int dataID,
-                                     unsigned char *data,
-                                     unsigned int total_lenth, int sendto)
+template <>
+int Application<SocketClient>::encode_and_send(unsigned short type,
+                                               unsigned int dataID,
+                                               unsigned char *data,
+                                               unsigned int total_lenth,
+                                               int sendto)
 {
     Message message(type);
     message.set_dataID(dataID);
@@ -229,16 +232,16 @@ unsigned char *Application<T>::receive_and_decode(Message &message)
 {
     if (((Message::MessageBuffer *)(message.get_buffer()))->Start != 0x0D00 ||
         ((Message::MessageBuffer *)(message.get_buffer()))->End != 0x0721) {
-        
         std::string hex;
         std::stringstream ss;
 
         ss << std::hex << "0x"
            << ((Message::MessageBuffer *)(message.get_buffer()))->Start
-           << std::endl << "0x"
+           << std::endl
+           << "0x"
            << ((Message::MessageBuffer *)(message.get_buffer()))->MessageType
-           << std::endl << "0x"
-           << ((Message::MessageBuffer *)(message.get_buffer()))->End
+           << std::endl
+           << "0x" << ((Message::MessageBuffer *)(message.get_buffer()))->End
            << std::endl
            << std::dec;
 
@@ -247,10 +250,22 @@ unsigned char *Application<T>::receive_and_decode(Message &message)
         WARNING("Start: " + hex);
         ss >> hex;
         WARNING("MessageType: " + hex);
-        WARNING("DataID: " + std::to_string(((Message::MessageBuffer *)(message.get_buffer()))->DataID));
-        WARNING("DataTotalLenth: " + std::to_string(((Message::MessageBuffer *)(message.get_buffer()))->DataTotalLenth));
-        WARNING("Offset: " + std::to_string(((Message::MessageBuffer *)(message.get_buffer()))->Offset));
-        WARNING("DataLenth: " + std::to_string(((Message::MessageBuffer *)(message.get_buffer()))->DataLenth));
+        WARNING(
+            "DataID: " +
+            std::to_string(
+                ((Message::MessageBuffer *)(message.get_buffer()))->DataID));
+        WARNING(
+            "DataTotalLenth: " +
+            std::to_string(((Message::MessageBuffer *)(message.get_buffer()))
+                               ->DataTotalLenth));
+        WARNING(
+            "Offset: " +
+            std::to_string(
+                ((Message::MessageBuffer *)(message.get_buffer()))->Offset));
+        WARNING(
+            "DataLenth: " +
+            std::to_string(
+                ((Message::MessageBuffer *)(message.get_buffer()))->DataLenth));
         ss >> hex;
         WARNING("End: " + hex + "\n");
         return nullptr;
@@ -260,7 +275,7 @@ unsigned char *Application<T>::receive_and_decode(Message &message)
     unsigned int total_lenth = message.get_dataTotalLenth();
     unsigned int dataID = message.get_dataID();
 
-    if(total_lenth == 0) {
+    if (total_lenth == 0) {
         ERROR("Error: Received message's total_lenth is 0, drop it.");
         return nullptr;
     }
@@ -283,7 +298,6 @@ unsigned char *Application<T>::receive_and_decode(Message &message)
 
 template <typename T> void Application<T>::join()
 {
-
     while (true) {
         std::string cmd;
         std::getline(std::cin, cmd);

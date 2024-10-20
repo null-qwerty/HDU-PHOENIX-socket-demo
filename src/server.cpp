@@ -7,7 +7,8 @@
 #include "SocketServer.hpp"
 #include "Message.hpp"
 #include "Application.hpp"
-#include "Info.hpp"
+
+#include <PHOENIX/Utils/Info/Info.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -26,28 +27,29 @@ int main(int argc, char *argv[])
     server.set_on_message([&app](int client, const char *message) {
         Message msg(message);
         unsigned char *m = app.receive_and_decode(msg); // 解码消息
-        if (m != nullptr &&
-            msg.get_messageType() == Message::MessageType::STRING_MSG)  // 字符串消息
-            INFO("Client " + std::to_string(client) + ": " +        // 输出消息
+        if (m != nullptr && msg.get_messageType() ==
+                                Message::MessageType::STRING_MSG) // 字符串消息
+            INFO("Client " + std::to_string(client) + ": " + // 输出消息
                  std::string((char *)m));
-        if (m != nullptr &&
-            msg.get_messageType() == Message::MessageType::IMAGE_MSG) { // 图像消息
-            DEBUG("Image received.");                           
+        if (m != nullptr && msg.get_messageType() ==
+                                Message::MessageType::IMAGE_MSG) { // 图像消息
+            DEBUG("Image received.");
             std::vector<unsigned char> data(m, m + msg.get_dataTotalLenth());
             cv::Mat image = cv::imdecode(data, cv::IMREAD_COLOR);
             std::thread([=]() {
-                cv::namedWindow("Client " + std::to_string(client), cv::WINDOW_NORMAL);
+                cv::namedWindow("Client " + std::to_string(client),
+                                cv::WINDOW_NORMAL);
                 cv::imshow("Image", image); // 显示图像
                 cv::waitKey(0);
                 cv::destroyAllWindows();
-            }).detach();    // 分离显示图像线程
+            }).detach(); // 分离显示图像线程
         }
         if (m != nullptr)
             delete[] m; // 释放内存
     });
     // 设置连接成功处理函数
     server.set_on_connect([&app](int client) {
-        if (client > 15)    // 最多支持 16 个客户端
+        if (client > 15) // 最多支持 16 个客户端
             app.disconnect(client);
         INFO("Client " + std::to_string(client) +
              " connected."); // 输出连接信息
@@ -58,7 +60,8 @@ int main(int argc, char *argv[])
     });
     // 设置断开连接处理函数
     server.set_on_disconnect([&server](int client) {
-        INFO("Client " + std::to_string(client) + " disconnected.");    // 输出断开连接信息
+        INFO("Client " + std::to_string(client) +
+             " disconnected."); // 输出断开连接信息
     });
     // 添加主动发送消息命令
     app.add_command("sendto", [&app](std::string args) {
@@ -169,14 +172,15 @@ int main(int argc, char *argv[])
         DEBUG("Connected clients: " + app.get_clients());
     });
     // 添加清屏命令
-    app.add_command("clear", [&app](std::string args) { 
+    app.add_command("clear", [&app](std::string args) {
         int sp = std::count(args.begin(), args.end(), ' ');
         if (sp > 0)
             WARNING("clear: no arguments needed.");
-        system("clear"); });
+        system("clear");
+    });
 
     server.start(); // 启动服务器
-    app.join();    // 阻塞并等待命令输入
+    app.join(); // 阻塞并等待命令输入
 
     return 0;
 }

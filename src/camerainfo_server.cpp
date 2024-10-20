@@ -6,7 +6,8 @@
 #include "SocketServer.hpp"
 #include "Message.hpp"
 #include "Application.hpp"
-#include "Info.hpp"
+
+#include <PHOENIX/Utils/Info/Info.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -43,7 +44,8 @@ int main(int argc, char *argv[])
                                       -0.0068734187976891474,
                                       0.0 };
         app.encode_and_send(Message::MessageType::CAMERA_INFO, 0,
-                            (unsigned char *)(camera_info), sizeof(camera_info), client);
+                            (unsigned char *)(camera_info), sizeof(camera_info),
+                            client);
     });
 
     server.set_on_disconnect([&server](int client) {
