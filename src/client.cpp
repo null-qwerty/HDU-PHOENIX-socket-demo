@@ -66,7 +66,7 @@ struct ClientApp {
 std::shared_ptr<SocketClient> video_receiver =
     std::make_shared<SocketClient>("127.0.0.1", 8000);
 std::shared_ptr<SocketClient> camerainfo_receiver =
-    std::make_shared<SocketClient>("127.0.0.1", 5140);
+    std::make_shared<SocketClient>("127.0.0.1", 8001);
 std::shared_ptr<SocketClient> transformer =
     std::make_shared<SocketClient>("127.0.0.1", 4399);
 
@@ -154,7 +154,7 @@ void initClient(std::shared_ptr<SocketClient> &socket,
 
 int main(int argc, char *argv[])
 {
-    cv::namedWindow("received", cv::WINDOW_NORMAL);
+    // cv::namedWindow("received", cv::WINDOW_NORMAL);
 
     initClient(video_receiver, video_app);
     initClient(camerainfo_receiver, camerainfo_app);
